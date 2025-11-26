@@ -1,0 +1,1 @@
+export const token: { token: string, identity: string } = await fetch('/twilio/token').then(res => res.json());

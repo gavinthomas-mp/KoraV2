@@ -4,7 +4,7 @@ import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@/components/ui/tab
 import AppLayout from "@/Layouts/AppLayout";
 import { Form, Link } from "@inertiajs/react";
 
-function Index(props:{ account: any }) {
+function Edit(props:{ didNumber: any, account: any }) {
     return (
         <AppLayout>
             <TabGroup>
@@ -89,7 +89,8 @@ function Index(props:{ account: any }) {
                 </TabPanels>
             </TabGroup>
         </AppLayout>
+
     )
 }
 
-export default Index;
+export default Edit;

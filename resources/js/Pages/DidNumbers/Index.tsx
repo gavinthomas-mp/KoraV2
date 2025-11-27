@@ -1,10 +1,12 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import AppLayout from "@/Layouts/AppLayout";
 import { Form, Link } from "@inertiajs/react";
 import { Edit } from "lucide-react";
 
 function Index(props:{ accounts: any }) {
     const accounts = props?.accounts?.data;
+    const links = props?.accounts?.links;
     return (
         <AppLayout>
             {
@@ -33,7 +35,7 @@ function Index(props:{ accounts: any }) {
                                     <TableCell>
                                         <Link 
                                             className="p-2.5 rounded-full bg-green-400 inline-flex items-center justify-center mr-2 transition-all hover:bg-green-500"
-                                            href={`/did-numbers/${didNumber.id}`}>
+                                            href={`/didnumbers/${didNumber.id}`}>
                                             <Edit className="size-4 text-white" />
                                         </Link>
                                     </TableCell>
@@ -43,6 +45,18 @@ function Index(props:{ accounts: any }) {
                     </Table>
                 )
             }
+            {
+                links && (
+                    <Pagination>
+                        <PaginationContent>
+                            {links.map((link: any, index: number) => (
+                                <PaginationItem key={index}>
+                                    <PaginationLink size={'default'} isActive={link.active} href={link.url} dangerouslySetInnerHTML={{ __html: link.label }} />
+                                </PaginationItem>
+                            ))}
+                        </PaginationContent>
+                    </Pagination>
+            )}
         </AppLayout>
     )
 }

@@ -15,7 +15,7 @@ class DidNumberController extends Controller
         ]);
     }
 
-    public function show($id)
+    public function edit($id)
     {
         return Inertia::render('DidNumbers/Edit', [
             'account' => DidNumber::findOrFail($id),

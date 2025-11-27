@@ -110,6 +110,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::group(['prefix' => 'didnumbers', 'as' => 'didnumbers.'], function () {
         Route::get('/', [DidNumberController::class, 'index'])->name('index');
+        Route::get('/create', [DidNumberController::class, 'create'])->name('create');
+        Route::get('/{id}', [DidNumberController::class, 'edit'])->name('edit');
     });
 
     Route::group(['prefix' => 'reports', 'as' => 'reports.'], function () {

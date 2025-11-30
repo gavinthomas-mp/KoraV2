@@ -27,6 +27,8 @@ class Call extends Model
         'ended_at' => 'datetime',
     ];
 
+    public $timestamps = false;
+
     public function operator(): BelongsTo
     {
         return $this->belongsTo(Operator::class);
@@ -35,5 +37,10 @@ class Call extends Model
     public function skill(): BelongsTo
     {
         return $this->belongsTo(Skill::class);
+    }
+    
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }

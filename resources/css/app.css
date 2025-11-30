@@ -59,6 +59,10 @@
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-ring: var(--sidebar-ring);
+
+    --color-mp-orange: #FF7702;
+    --color-mp-orange-dark: #E66E02;
+    --color-mp-green: #38C28C;
 }
 
 :root {

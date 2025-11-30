@@ -3,12 +3,21 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import AppLayout from "@/Layouts/AppLayout";
 import { Form, Link } from "@inertiajs/react";
 import { Edit } from "lucide-react";
+import { index } from "@/routes/didnumbers";
+import { BreadcrumbItem } from "@/types";
+
+const breadcrumbs: BreadcrumbItem[] = [
+    {
+        title: 'DID Numbers',
+        href: index().url,
+    }
+]
 
 function Index(props:{ accounts: any }) {
     const accounts = props?.accounts?.data;
     const links = props?.accounts?.links;
     return (
-        <AppLayout>
+        <AppLayout breadcrumbs={breadcrumbs}>
             {
                 accounts && (
                     <Table>
@@ -34,7 +43,7 @@ function Index(props:{ accounts: any }) {
                                     <TableCell>{didNumber.bilingual ? 'Yes' : 'No'}</TableCell>
                                     <TableCell>
                                         <Link 
-                                            className="p-2.5 rounded-full bg-green-400 inline-flex items-center justify-center mr-2 transition-all hover:bg-green-500"
+                                            className="p-2.5 rounded-full bg-mp-orange inline-flex items-center justify-center mr-2 transition-all hover:bg-mp-orange-dark text-white"
                                             href={`/didnumbers/${didNumber.id}`}>
                                             <Edit className="size-4 text-white" />
                                         </Link>

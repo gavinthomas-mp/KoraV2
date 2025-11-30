@@ -31,8 +31,15 @@ class CallLog extends Model
         'task_sid'
     ];
 
+    public $timestamps = false;
+
     public function messages()
     {
         return $this->hasMany(Message::class, 'call_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

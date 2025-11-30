@@ -112,6 +112,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [DidNumberController::class, 'index'])->name('index');
         Route::get('/create', [DidNumberController::class, 'create'])->name('create');
         Route::get('/{id}', [DidNumberController::class, 'edit'])->name('edit');
+        Route::patch('/{id}', [DidNumberController::class, 'update'])->name('update');
+        Route::post('/', [DidNumberController::class, 'store'])->name('store');
+
+        Route::get('/{id}/did-numbers', [DidNumberController::class, 'didNumbers'])->name('did-numbers');
+        Route::post('/{id}/did-numbers', [DidNumberController::class, 'storeDidNumber'])->name('did-numbers.store')->withoutMiddleware([VerifyCsrfToken::class]);
+        Route::get('/{id}/call-types', [DidNumberController::class, 'callTypes'])->name('call-types');
+        Route::get('/{id}/contacts', [DidNumberController::class, 'contacts'])->name('contacts');
+        Route::get('/{id}/on-call-schedules', [DidNumberController::class, 'onCallSchedules'])->name('on-call-schedules');
+        Route::get('/{id}/calls', [DidNumberController::class, 'calls'])->name('calls');
+        Route::get('/{id}/messages', [DidNumberController::class, 'messages'])->name('messages');
+        Route::get('/{id}/advisements', [DidNumberController::class, 'advisements'])->name('advisements');
+        Route::get('/{id}/edit-history', [DidNumberController::class, 'editHistory'])->name('edit-history');
+        Route::get('/{id}/skills', [DidNumberController::class, 'skills'])->name('skills');
     });
 
     Route::group(['prefix' => 'reports', 'as' => 'reports.'], function () {

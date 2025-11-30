@@ -4,6 +4,15 @@ import AppLayout from "@/Layouts/AppLayout";
 import { Link, router } from "@inertiajs/react";
 import { Edit, Trash } from "lucide-react";
 import DeleteAccount from "@/components/delete-account";
+import { BreadcrumbItem } from "@/types";
+import { index } from "@/routes/accounts";
+
+const breadcrumbs: BreadcrumbItem[] = [
+    {
+        title: 'Accounts',
+        href: index().url,
+    }
+]
 
 function Index(props: any) {
     const accounts = props?.accounts?.data;
@@ -13,7 +22,7 @@ function Index(props: any) {
         router.visit(`/accounts/${event}`);
     };
     return (
-        <AppLayout>
+        <AppLayout breadcrumbs={breadcrumbs}>
             {
                 accounts && (
                     <Table>
@@ -33,7 +42,7 @@ function Index(props: any) {
                                     <TableCell>{account.created}</TableCell>
                                     <TableCell>
                                         <Link 
-                                            className="p-2.5 rounded-full bg-green-400 inline-flex items-center justify-center mr-2 transition-all hover:bg-green-500"
+                                            className="p-2.5 rounded-full bg-mp-orange inline-flex items-center justify-center mr-2 transition-all hover:bg-mp-orange-dark text-white"
                                             href={`/accounts/${account.id}`}>
                                             <Edit className="size-4" />
                                         </Link>

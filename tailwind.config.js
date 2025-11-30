@@ -18,6 +18,9 @@
           'mp-green': {
             'dark': '#35b583',
             'default': '#38C28C',
+          },
+          'mp-orange': {
+            'default': '#FF7702'
           }
         }
       },

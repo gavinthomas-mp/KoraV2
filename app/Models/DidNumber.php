@@ -24,4 +24,24 @@ class DidNumber extends Model
     {
         return $this->hasMany(CallType::class, 'did_id');
     }
+
+    public function fields(): HasMany
+    {
+        return $this->hasMany(DidNumberField::class, 'did_id');
+    }
+
+    public function didNumbers(): HasMany
+    {
+        return $this->hasMany(DidNumberEntry::class, 'did_id');
+    }
+
+    public function calls(): HasMany
+    {
+        return $this->hasMany(Call::class, 'did_id');
+    }
+
+    public function messages(): HasMany
+    {
+        return $this->hasMany(Message::class, 'did_id');
+    }
 }

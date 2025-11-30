@@ -35,4 +35,11 @@ class CallType extends Model
     {
         return $this->through('actions')->has('prompts');
     }
+
+    protected static function booted()
+    {
+        static::addGlobalScope('notDeleted', function ($query) {
+            $query->where('deleted', 0);
+        });
+    }
 }

@@ -115,3 +115,9 @@ export interface ScriptData {
     prompts: Record<string, Prompt[]>;
     requested_employee_id?: string;
 }
+
+export interface DidNumber {
+    id: string;
+    number: string;
+    answerphrase?: string;
+}

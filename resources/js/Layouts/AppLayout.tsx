@@ -1,4 +1,4 @@
-import React, { createContext, useMemo, useState, useEffect } from 'react';
+import React, { createContext, useMemo, useState, useEffect, ReactNode } from 'react';
 import OperatorScreen from '@/components/OperatorScreen';
 import { Link } from '@inertiajs/react';
 import { token } from '@/elements/token';
@@ -8,14 +8,19 @@ import AppSidebarLayout from './app/app-sidebar-layout';
 import { Supervisor, WorkerInfo, Workspace } from "twilio-taskrouter";
 import { Device } from "@twilio/voice-sdk";
 import { usePage } from "@inertiajs/react";
+import { BreadcrumbItem } from '@/types';
 
+interface AppLayoutProps {
+    children: ReactNode;
+    breadcrumbs?: BreadcrumbItem[];
+}
 export const WorkerContext = createContext<any>(null);
 export const CalltypeContext = createContext<any>({
     selectedCalltype: null,
     setSelectedCalltype: (callTypeId: number) => {}
 });
 
-export default function AppLayout({ children }: { children: React.ReactNode }) {
+export default function AppLayout({ children, breadcrumbs }: AppLayoutProps) {
     const [enableDisconnectWorker, setEnableDisconnectWorker] = useState<boolean>(false);
 
     const [workerObject, setWorkerObject] = useState<Supervisor | null>(null);
@@ -226,7 +231,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     return (
         <WorkerContext.Provider value={workerContextValue}>
             <CalltypeContext.Provider value={callTypeContextValue}>
-                <AppSidebarLayout>
+                <AppSidebarLayout breadcrumbs={breadcrumbs} {...props}>
                     <AppContent variant='sidebar' className='overflow-x-hidden'>
                         <main className="py-10">
                             <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">

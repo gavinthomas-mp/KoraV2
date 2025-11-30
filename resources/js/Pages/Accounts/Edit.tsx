@@ -3,14 +3,26 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@/components/ui/tabs";
 import AppLayout from "@/Layouts/AppLayout";
+import { BreadcrumbItem } from "@/types";
 import { Form, Link } from "@inertiajs/react";
 import { SelectValue } from "@radix-ui/react-select";
+import { index, show } from "@/routes/accounts";
 
+const breadcrumbs: BreadcrumbItem[] = [
+    {
+        title: 'Accounts',
+        href: index().url,
+    },
+    {
+        title: 'Edit Account',
+        href: ''
+    }
+]
 function Edit(props: any) {
     const account = props?.account;
     const subAccounts = props?.subAccounts;
     return (
-        <AppLayout>
+        <AppLayout breadcrumbs={breadcrumbs}>
             <TabGroup className="mb-6">
                 <TabList>
                     <Tab>Details</Tab>

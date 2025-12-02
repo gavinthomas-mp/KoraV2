@@ -13,7 +13,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     }
 ]
 
-function Index(props:{ accounts: any }) {
+function DidNumbersIndex(props:{ accounts: any }) {
     const accounts = props?.accounts?.data;
     const links = props?.accounts?.links;
     return (
@@ -70,4 +70,4 @@ function Index(props:{ accounts: any }) {
     )
 }
 
-export default Index;
+export default DidNumbersIndex;

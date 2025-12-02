@@ -7,6 +7,9 @@ import DeleteAccount from "@/components/delete-account";
 import { BreadcrumbItem } from "@/types";
 import { index } from "@/routes/accounts";
 
+interface AccountsIndexProps {
+    accounts: any;
+}
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Accounts',
@@ -14,7 +17,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     }
 ]
 
-function Index(props: any) {
+function AccountsIndex(props: AccountsIndexProps) {
     const accounts = props?.accounts?.data;
     const links = props?.accounts?.links;
 
@@ -70,4 +73,4 @@ function Index(props: any) {
     )
 }
 
-export default Index;
+export default AccountsIndex;

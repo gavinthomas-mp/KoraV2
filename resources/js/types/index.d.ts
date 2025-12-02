@@ -100,6 +100,18 @@ export interface Section {
     section_action?: string;
 }
 
+export interface PaginatedResponse<T> {
+    data: T[];
+    links: Array<{
+        url: string | null;
+        label: string;
+        active: boolean;
+    }>;
+    current_page?: number;
+    last_page?: number;
+    per_page?: number;
+    total?: number;
+}
 export interface ScriptData {
     schedule: {
         id: string;
@@ -117,7 +129,134 @@ export interface ScriptData {
 }
 
 export interface DidNumber {
-    id: string;
-    number: string;
-    answerphrase?: string;
+    id: number;
+    account_id: number;
+    status: boolean;
+    did_number: number;
+    industry: string;
+    alias_number: string;
+    difficulty: string;
+    company: string;
+    company_visible: boolean;
+    businesstype: string;
+    date_entered: Date;
+    date_modified: Date;
+    modified_user_id: string;
+    created_by: string;
+    description: string;
+    assigned_user_id: string;
+    timezone: string;
+    contact_name: string;
+    contact_phone: string;
+    contact_email: string;
+    address1: string;
+    address_visible: boolean;
+    address2: string;
+    city: string;
+    state: string;
+    zip: string;
+    province: string;
+    main_phone: string;
+    main_phone_visible: boolean;
+    main_fax: string;
+    main_fax_visible: boolean;
+    alt_phone: string;
+    alt_phone_visible: boolean;
+    website: string;
+    website_visible: boolean;
+    hours: string;
+    hours_visible: boolean;
+    email: string;
+    email_visible: boolean;
+    type: string;
+    privacy: string;
+    country: string;
+    answerphrase: string;
+    did_color: string;
+    has_oncall: number;
+    legacy: boolean;
+    legacy_accountcode: string;
+    legacy_dispatch: string;
+    deleted: boolean;
+    deleted_ts: Date;
+    legacy_multi_oncall: boolean;
+    overflow: number;
+    primary_or_overflow: number;
+    radio_advertising: boolean;
+    calls_per_day: number;
+    calls_timing: string;
+    calls_timing_other: string;
+    service_sku: string;
+    email_format: number;
+    email_subject_template: string;
+    include_cid: number;
+    exclude_prompts: number;
+    include_msg_id: number;
+    include_call_events: number;
+    scheduling_option: number;
+    advanced_setup: number;
+    billto_account: string;
+    bilingual: number;
+    hipaa: number;
+    pci: number;
+    smtp_profile: string;
+    security_question_1: string;
+    security_question_2: string;
+    security_question_3: string;
+    security_answer_1: string;
+    security_answer_2: string;
+    security_answer_3: string;
+    enable_voicemail: number;
+    skip_autofill: number;
+    tiger_connect_org: string;
+    tiger_connect_api_key: string;
+    disable_recording: number;
+    show_agent_bio: number;
+    advanced_routing: number;
+    translator: number;
+    recording: number;
+    high_priority: number;
+    spam_blocking: number;
+    delayed_answer: number;
+    routing_product_tier: string;
+    call_list_notes: string;
+    external_key: string;
+    routing_sector: string;
+    pmd_api_key: string;
+    directions: string;
+    show_mp_number: boolean;
+    transfer_timer: number;
 }
+export interface User {
+    id: number;
+    username: string;
+    password: string;
+    name: string;
+    extension: string;
+    old_role: string;
+    firstname: string;
+    lastname: string;
+    email: string;
+    account_id: number;
+    subaccount_id: number;
+    employee_id: number;
+    created: Date;
+    deleted: boolean | null;
+    deleted_ts: Date | null;
+    operator: boolean;
+    display_stat: boolean;
+    alias: string;
+    monitor: boolean;
+    add_account_notes: boolean;
+    photo: string | null;
+    role: string;
+    roleName: string;
+    autoanswer: boolean;
+    twilio: boolean;
+    agent_bio: string;
+    employee_group: string;
+    disabled_on: Date | null;
+    force_password_reset: boolean;
+    injixo_id: string | null;
+}
+

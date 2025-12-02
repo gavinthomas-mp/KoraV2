@@ -41,8 +41,6 @@ function DidNumbers(props: DidNumbersProps): JSX.Element {
     const id = props.account?.id;
     const didNumbers = props.didNumbers ?? [];
     const handleAddDidNumber = () => {
-        // Logic to add a new DID number entry
-        console.log("Add Did Number clicked");
     }
 
     const handleDeleteDidNumber = () => {

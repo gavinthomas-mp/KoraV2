@@ -26,7 +26,7 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: ``,
     }
 ]
-function Edit(props: EditProps): JSX.Element {
+function DidNumbersEdit(props: EditProps): JSX.Element {
     const id = props.account?.id;
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -37,4 +37,4 @@ function Edit(props: EditProps): JSX.Element {
     )
 }
 
-export default Edit;
+export default DidNumbersEdit;

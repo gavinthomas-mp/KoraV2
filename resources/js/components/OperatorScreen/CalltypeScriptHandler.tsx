@@ -7,7 +7,7 @@ function CalltypeScriptHandler() {
     const { selectedCalltype, didId } = useContext<any>(WorkerContext) || {};
     const [scriptContent, setScriptContent] = useState<string>("");
 
-    useEffect(() => {
+    const onScreenPop = () => {
         fetch(`/scripts/${didId}/${selectedCalltype?.id}/13649`, {
             method: 'POST',
             headers: {
@@ -15,10 +15,10 @@ function CalltypeScriptHandler() {
             },
             body: JSON.stringify(selectedCalltype),
         })
-            .then(response => response.json())
-            .then(data => setScriptContent(data))
-            .catch(error => console.error('Error fetching script:', error));
-    }, [selectedCalltype?.id]);
+        .then(response => response.json())
+        .then(data => setScriptContent(data))
+        .catch(error => console.error('Error fetching script:', error));
+    }
 
     return (
         <>

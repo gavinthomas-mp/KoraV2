@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreDidNumberRequest;
 use App\Models\DidNumber;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -41,7 +42,7 @@ class DidNumberController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(StoreDidNumberRequest $request)
     {
         $data = $request->validate([
             'number' => 'required|string|unique:did_numbers,number',
@@ -58,24 +59,18 @@ class DidNumberController extends Controller
     {
         $didNumber = DidNumber::findOrFail($id);
 
-        $data = $request->validate([
-            'number' => 'required|string|unique:ccact_did_numbers_entries,number',
-            'answerphrase' => 'required|string',
-        ]);
+        $data = $request->validated();
 
         $didNumber->didNumbers()->create($data);
 
         return redirect()->route('didnumbers.did-numbers', ['id' => $id])->with('success', 'DID Number added successfully.');
     }
 
-    public function update(Request $request, $id)
+    public function update(StoreDidNumberRequest $request, $id)
     {
         $didNumber = DidNumber::findOrFail($id);
 
-        $data = $request->validate([
-            'number' => 'required|string|unique:did_numbers,number,' . $didNumber->id,
-            'active' => 'sometimes|boolean',
-        ]);
+        $data = $request->validated();
 
         $didNumber->update($data);
 

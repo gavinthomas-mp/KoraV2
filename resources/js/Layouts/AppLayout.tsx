@@ -235,7 +235,9 @@ export default function AppLayout({ children, breadcrumbs }: AppLayoutProps) {
                     <AppContent variant='sidebar' className='overflow-x-hidden'>
                         <main className="py-10">
                             <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                                {children}
+                                <div className="p-6 bg-white rounded-lg shadow-md">
+                                    {children}
+                                </div>
                             </div>
                         </main>
                         <OperatorScreen />

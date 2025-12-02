@@ -9,6 +9,7 @@ use App\Http\Controllers\DidNumberController;
 use App\Http\Controllers\TwilioWebhookController;
 use App\Http\Controllers\TwilioController;
 use App\Http\Controllers\TwilioCallbackController;
+use App\Http\Controllers\UsersController;
 
 use App\Http\Controllers\ScriptController;
 use App\Http\Controllers\SettingsController;
@@ -112,11 +113,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [DidNumberController::class, 'index'])->name('index');
         Route::get('/create', [DidNumberController::class, 'create'])->name('create');
         Route::get('/{id}', [DidNumberController::class, 'edit'])->name('edit');
-        Route::patch('/{id}', [DidNumberController::class, 'update'])->name('update');
+        Route::patch('/{id}', [DidNumberController::class, 'update'])->name('update')->withoutMiddleware([VerifyCsrfToken::class]);
         Route::post('/', [DidNumberController::class, 'store'])->name('store');
 
         Route::get('/{id}/did-numbers', [DidNumberController::class, 'didNumbers'])->name('did-numbers');
-        Route::post('/{id}/did-numbers', [DidNumberController::class, 'storeDidNumber'])->name('did-numbers.store')->withoutMiddleware([VerifyCsrfToken::class]);
+        Route::post('/{id}/did-numbers', [DidNumberController::class, 'storeDidNumber'])->name('did-numbers.store');
         Route::get('/{id}/call-types', [DidNumberController::class, 'callTypes'])->name('call-types');
         Route::get('/{id}/contacts', [DidNumberController::class, 'contacts'])->name('contacts');
         Route::get('/{id}/on-call-schedules', [DidNumberController::class, 'onCallSchedules'])->name('on-call-schedules');
@@ -170,13 +171,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::group(['prefix' => 'users', 'as' => 'users.'], function () {
-        Route::get('/', function () {
-            return Inertia::render('Users/Index');
-        })->name('index');
-
-        Route::get('/edit', function () {
-            return Inertia::render('Users/Edit');
-        })->name('edit');
+        Route::get('/', [UsersController::class, 'index'])->name('index');
+        Route::get('/edit/{id}', [UsersController::class, 'edit'])->name('edit');
+        Route::patch('/update/{id}', [UsersController::class, 'update'])->name('update');
     });
 
     Route::group(['prefix' => 'roles', 'as' => 'roles.'], function () {
@@ -196,4 +193,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 });
 
-// require __DIR__.'/settings.php';
+require __DIR__.'/settings.php';

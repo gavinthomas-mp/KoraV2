@@ -18,7 +18,7 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: ''
     }
 ]
-function Edit(props: any) {
+function AccountsEdit(props: any) {
     const account = props?.account;
     const subAccounts = props?.subAccounts;
     return (
@@ -169,4 +169,4 @@ function Edit(props: any) {
     )
 }
 
-export default Edit;
+export default AccountsEdit;

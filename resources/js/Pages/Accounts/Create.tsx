@@ -1,6 +1,7 @@
 import AppLayout from "@/Layouts/AppLayout";
 import { BreadcrumbItem } from "@/types";
 import { index } from "@/routes/accounts";
+import Create from "../Operators/Create";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -12,7 +13,7 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: ``,
     }
 ]
-function Create(props: any) {
+function AccountsCreate(props: any) {
     return (
         <AppLayout>
             <div>Create Account Page</div>
@@ -20,4 +21,4 @@ function Create(props: any) {
     )
 }
 
-export default Create;
+export default AccountsCreate;

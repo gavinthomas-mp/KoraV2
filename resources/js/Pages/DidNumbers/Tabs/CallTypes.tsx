@@ -3,7 +3,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Pagination, PaginationContent, PaginationItem, PaginationLink } from "@/components/ui/pagination";
 import { Switch } from "@headlessui/react";
 import AppLayout from "@/Layouts/AppLayout";
-import { DidNumberTabs } from "@/components/DidNumberTabs";
+import { DidNumberTabs } from "@/components/Tabs/DidNumberTabs";
 import { BreadcrumbItem } from "@/types";
 import { index } from "@/routes/didnumbers";
 

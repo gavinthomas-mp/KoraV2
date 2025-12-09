@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\User;
+use App\Models\Role;
 
 class UsersController extends Controller
 {
@@ -33,21 +36,74 @@ class UsersController extends Controller
         $user = User::findOrFail($id);
 
         return Inertia::render('Users/Edit', [
-            'user' => $user
+            'user' => $user->load('userSetting'),
+            'roles' => Role::all(),
+            'currentTab' => 'profile'
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateUserRequest $request, $id)
     {
         $user = User::findOrFail($id);
 
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:ccact_users,email,' . $user->id,
-        ]);
+        $validated = $request->validated();
 
-        $user->update($validated);
+        // $user->update($validated['user']);
+
+        $user->userSetting->update($validated['user_setting']);
 
         return redirect()->route('users.index')->with('success', 'User updated successfully.');
+    }
+
+    public function store(StoreUserRequest $request)
+    {
+        $validated = $request->validated();
+
+        User::create($validated);
+
+        return redirect()->route('users.index')->with('success', 'User created successfully.');
+    }
+
+    public function queueAssignments($id)
+    {
+        $user = User::findOrFail($id);
+
+        return Inertia::render('Users/Tabs/QueueAssignments', [
+            'user' => $user,
+            'currentTab' => 'queue-assignments'
+        ]);
+    }
+
+    public function phrases($id)
+    {
+        $user = User::findOrFail($id);
+
+        return Inertia::render('Users/Tabs/Phrases', [
+            'user' => $user,
+            'currentTab' => 'phrases',
+            'phrases' => $user->userPhrases()->notDeleted()->get(),
+        ]);
+    }
+
+    public function bio($id)
+    {
+        $user = User::findOrFail($id);
+
+        return Inertia::render('Users/Tabs/Bio', [
+            'user' => $user,
+            'currentTab' => 'bio',
+        ]);
+    }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('search', '');
+
+        $results = User::where('name', 'like', '%' . $query . '%')
+            ->orWhere('email', 'like', '%' . $query . '%')
+            ->where('deleted', 0)
+            ->get();
+
+        return response()->json($results);
     }
 }

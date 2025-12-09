@@ -1,19 +1,19 @@
-import React, { createContext, useMemo, useState, useEffect, ReactNode } from 'react';
+import { createContext, useMemo, useState, useEffect, ReactNode } from 'react';
 import OperatorScreen from '@/components/OperatorScreen';
-import { Link } from '@inertiajs/react';
 import { token } from '@/elements/token';
-import { AppSidebar } from '@/components/app-sidebar';
 import { AppContent } from '@/components/app-content';
 import AppSidebarLayout from './app/app-sidebar-layout';
 import { Supervisor, WorkerInfo, Workspace } from "twilio-taskrouter";
 import { Device } from "@twilio/voice-sdk";
 import { usePage } from "@inertiajs/react";
 import { BreadcrumbItem } from '@/types';
+import { initializeTwilioWorker } from '@/lib/twilioWorker';
 
 interface AppLayoutProps {
     children: ReactNode;
     breadcrumbs?: BreadcrumbItem[];
 }
+
 export const WorkerContext = createContext<any>(null);
 export const CalltypeContext = createContext<any>({
     selectedCalltype: null,
@@ -30,6 +30,7 @@ export default function AppLayout({ children, breadcrumbs }: AppLayoutProps) {
 
     const [deviceObject, setDeviceObject] = useState<Device | null>(null);
 
+    const [activeCall, setActiveCall] = useState<any>(null);
     const [currentCallStart, setCurrentCallStart] = useState<any>(new Date());
 
     const [currentReservations, setCurrentReservations] = useState<Map<string, any>[]>([]);
@@ -38,6 +39,7 @@ export default function AppLayout({ children, breadcrumbs }: AppLayoutProps) {
     const [selectedCalltype, setSelectedCalltype] = useState<any>(null);
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [operatorScreenOpen, setOperatorScreenOpen] = useState<boolean>(false);
+    
     const props = usePage().props;
     const tokenValue = token.token as string | null;
 
@@ -47,17 +49,23 @@ export default function AppLayout({ children, breadcrumbs }: AppLayoutProps) {
         }
     };
 
-    const handleAccept = () => {
-        if (reservationObject) {
-            return reservationObject.conference({
+    const handleIncomingCall = (call: any) => {
+        setActiveCall(call);
+
+        call.accept();
+    };
+
+    const handleAccept = (reservation: any = null) => {
+        if (reservation) {
+            setOperatorScreenOpen(true);
+            return reservation.conference({
                 endConferenceOnExit: true,
                 beep: false,
                 startConferenceOnEnter: true,
-                from: reservationObject.task.attributes.from,
+                from: reservation.task.attributes.from,
                 to: 'client:gthomas'
             })
             .then((conference: any) => {
-                console.log("Conference established for reservation", conference.sid);
                 setCurrentCallStart(new Date());
             })
             .catch((error: any) => {
@@ -95,102 +103,120 @@ export default function AppLayout({ children, breadcrumbs }: AppLayoutProps) {
         }
     }
 
+    // Initialize or retrieve existing Twilio instances from singleton
     useEffect(() => {
         if (!tokenValue) {
             return;
         }
 
-        const worker = new Supervisor(tokenValue);
+        const instances = initializeTwilioWorker(tokenValue);
+        // Set state from singleton instances
+        setWorkerObject(instances.worker);
+        setWorkSpace(instances.workspace);
+        setDeviceObject(instances.device);
 
-        const device = new Device(tokenValue);
-        
-        device.register();
+        // No cleanup needed - instances persist in module scope
+    }, [tokenValue]);
 
-        const workspace = new Workspace(tokenValue);
-
-        setWorkerObject(worker);
-        setWorkSpace(workspace);
-        setDeviceObject(device);
-
-        return () => {
-            if (worker) {
-                worker.disconnect();
-            }
-        }
-    }, [token]);
-
+    // Set up worker event listeners
     useEffect(() => {
         if (!workerObject) {
             return;
         }
 
-        workerObject.on('ready', (readyWorker: { sid: any, friendlyName: any}) => {
+        const handleReady = (readyWorker: { sid: any, friendlyName: any }) => {
             console.log("Worker is ready to receive tasks");
-        });
+        };
 
-        workerObject.on('tokenExpired', () => {
+        const handleTokenExpired = () => {
             console.log("Worker token has expired");
-        });
+        };
 
-        workerObject.on('tokenUpdated', () => {
+        const handleTokenUpdated = () => {
             console.log("Worker token has been updated");
-        });
+        };
 
-        workerObject.on('activityUpdated', (activity) => {
+        const handleActivityUpdated = (activity: any) => {
             console.log("Worker activity updated to:", activity);
-        });
+        };
 
-        workerObject.on('disconnected', (reason: any) => {
+        const handleDisconnected = (reason: any) => {
             setCurrentReservations([]);
-        })
+        };
 
-        workerObject.on('reservationCreated', (reservation) => {
-            console.log("New reservation created:", reservation.sid);
-            setReservationObject(reservation);
-            handleAccept();
+        const handleReservationCreated = (reservation: any) => {
+            setReservationObject(reservation)
+            handleAccept(reservation);
             setCurrentReservations((prevReservations) => [...prevReservations, reservation]);
-        });
+        };
+
+        workerObject.on('ready', handleReady);
+        workerObject.on('tokenExpired', handleTokenExpired);
+        workerObject.on('tokenUpdated', handleTokenUpdated);
+        workerObject.on('activityUpdated', handleActivityUpdated);
+        workerObject.on('disconnected', handleDisconnected);
+        workerObject.on('reservationCreated', handleReservationCreated);
+
+        // Cleanup listeners when component unmounts
+        return () => {
+            workerObject.off('ready', handleReady);
+            workerObject.off('tokenExpired', handleTokenExpired);
+            workerObject.off('tokenUpdated', handleTokenUpdated);
+            workerObject.off('activityUpdated', handleActivityUpdated);
+            workerObject.off('disconnected', handleDisconnected);
+            workerObject.off('reservationCreated', handleReservationCreated);
+        };
     }, [workerObject]);
 
+    // Set up reservation event listeners
     useEffect(() => {
         if (!reservationObject) {
             return;
         }
 
-        reservationObject.on('accepted', (reservation: { status: any }) => {
+        const handleAccepted = (reservation: { status: any }) => {
             console.log("Reservation accepted event:", reservation.status);
-        });
+        };
 
-        reservationObject.on('pending', (reservation: { status: any }) => {
+        const handlePending = (reservation: { status: any }) => {
             console.log("Reservation pending event:", reservation.status);
-        });
+        };
 
-        reservationObject.on('rejected', (reservation: { status: any }) => {
+        const handleRejected = (reservation: { status: any }) => {
             console.log("Reservation rejected event:", reservation.status);
-        });
+        };
 
-        reservationObject.on('timeout', (reservation: { status: any }) => {
+        const handleTimeout = (reservation: { status: any }) => {
             console.log("Reservation timeout event:", reservation.status);
             setEnableDisconnectWorker(false);
-        });
+        };
 
-        reservationObject.on('canceled', (reservation: { status: any }) => {
+        const handleCanceled = (reservation: { status: any }) => {
             console.log("Reservation canceled event:", reservation.status);
             setEnableDisconnectWorker(false);
-        });
-        
-        reservationObject.on('rescinded', (reservation: { status: any }) => {
-            console.log("Reservation rescinded event:", reservation.status);
-        });
+        };
 
-        reservationObject.on('wrappingUp', (reservation: { status: any }) => {
+        const handleRescinded = (reservation: { status: any }) => {
+            console.log("Reservation rescinded event:", reservation.status);
+        };
+
+        const handleWrappingUp = (reservation: { status: any }) => {
             console.log("Reservation wrappingUp event:", reservation.status);
-        });
-        
-        reservationObject.on('completed', (reservation: { status: any }) => {
+        };
+
+        const handleCompleted = (reservation: { status: any }) => {
             console.log("Reservation completed event:", reservation.status);
             setEnableDisconnectWorker(false);
-        });
+        };
+
+        reservationObject.on('accepted', handleAccepted);
+        reservationObject.on('pending', handlePending);
+        reservationObject.on('rejected', handleRejected);
+        reservationObject.on('timeout', handleTimeout);
+        reservationObject.on('canceled', handleCanceled);
+        reservationObject.on('rescinded', handleRescinded);
+        reservationObject.on('wrappingUp', handleWrappingUp);
+        reservationObject.on('completed', handleCompleted);
 
         if (workerObject && workerObject.reservations) {
             let reservationsArray: any[] = [];
@@ -209,7 +235,31 @@ export default function AppLayout({ children, breadcrumbs }: AppLayoutProps) {
                 });
             }
         }
-    })
+
+        // Cleanup listeners when reservation changes or component unmounts
+        return () => {
+            reservationObject.off('accepted', handleAccepted);
+            reservationObject.off('pending', handlePending);
+            reservationObject.off('rejected', handleRejected);
+            reservationObject.off('timeout', handleTimeout);
+            reservationObject.off('canceled', handleCanceled);
+            reservationObject.off('rescinded', handleRescinded);
+            reservationObject.off('wrappingUp', handleWrappingUp);
+            reservationObject.off('completed', handleCompleted);
+        };
+    }, [reservationObject, workerObject]);
+
+    useEffect(() => {
+        if (deviceObject) {
+            deviceObject.on('incoming', handleIncomingCall);
+        }
+
+        return () => {
+            if (deviceObject) {
+                deviceObject.off('incoming', handleIncomingCall);
+            }
+        };
+    }, [deviceObject]);
 
     const workerContextValue = useMemo(() => ({
         workerObject,
@@ -220,13 +270,14 @@ export default function AppLayout({ children, breadcrumbs }: AppLayoutProps) {
         didId,
         operatorScreenOpen,
         setOperatorScreenOpen
-    }), [workerObject, workSpace, deviceObject, activities, currentCallStart, didId, operatorScreenOpen, setOperatorScreenOpen]);
+    }), [workerObject, workSpace, deviceObject, activities, currentCallStart, didId, operatorScreenOpen]);
+    
     const callTypeContextValue = useMemo(() => ({
         selectedCalltype,
         setSelectedCalltype,
         searchQuery,
         setSearchQuery,
-    }), [selectedCalltype, setSelectedCalltype, searchQuery, setSearchQuery]);
+    }), [selectedCalltype, searchQuery]);
     
     return (
         <WorkerContext.Provider value={workerContextValue}>

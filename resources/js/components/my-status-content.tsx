@@ -1,5 +1,4 @@
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
-import { DropdownMenu } from '@radix-ui/react-dropdown-menu';
 import { useContext } from 'react';
 import { WorkerContext } from '@/Layouts/AppLayout';
 
@@ -25,7 +24,7 @@ export function MyStatusContent() {
             {workerObject?.activities && Array.from(workerObject.activities.values()).map((activity: any) => (
                 <DropdownMenuItem
                     key={activity.sid} 
-                    className="activity-item text-xs"
+                    className={`activity-item text-xs`}
                     onClick={() => handleActivityChange(activity.sid)}
                     >
                     {activity?.name}

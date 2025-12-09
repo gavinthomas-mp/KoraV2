@@ -33,67 +33,67 @@ import complaints from '@/routes/complaints';
 const mainNavItems: NavItem[] = [
     {
         title: 'Accounts',
-        href: index(),
+        href: index().url,
         icon: LayoutGrid,
     },
     {
         title: 'Setup',
-        href: didNumbers(),
+        href: didNumbers().url,
         icon: Settings,
     },
     {
         title: 'Reports',
-        href: reportsIndex(),
+        href: reportsIndex().url,
         icon: ChartColumnIncreasing,
     },
     {
         title: 'Call Log',
-        href: callLogIndex(),
+        href: callLogIndex().url,
         icon: ScrollText,
     },
     {
         title: 'Messages',
-        href: messagesIndex(),
+        href: messagesIndex().url,
         icon: Mails,
     },
     {
         title: 'Complaints',
-        href: complaintsIndex(),
+        href: complaintsIndex().url,
         icon: MonitorCheck,
     },
     {
         title: 'Mistakes',
-        href: mistakesIndex(),
+        href: mistakesIndex().url,
         icon: Frown,
     },
     {
         title: 'Bulletin',
-        href: bulletinIndex(),
+        href: bulletinIndex().url,
         icon: Pin,
     },
     {
         title: 'Inbox',
-        href: inboxIndex(),
+        href: inboxIndex().url,
         icon: Inbox,
     },
     {
         title: 'Users',
-        href: usersIndex(),
+        href: usersIndex().url,
         icon: Users,
     },
     {
         title: 'Roles',
-        href: rolesIndex(),
+        href: rolesIndex().url,
         icon: ShieldCheck,
     },
     {
         title: 'Settings',
-        href: settingsIndex(),
+        href: settingsIndex().url,
         icon: Wrench,
     },
     {
         title: 'Recent Calls',
-        href: recentCallsIndex(),
+        href: recentCallsIndex().url,
         icon: History,
     }
 ];
@@ -113,7 +113,7 @@ export function AppSidebar() {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <Link href={dashboard()} prefetch>
+                            <Link href={dashboard().url} prefetch>
                                 <AppLogo />
                             </Link>
                         </SidebarMenuButton>

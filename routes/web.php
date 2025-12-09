@@ -4,12 +4,15 @@ use Inertia\Inertia;
 use App\Http\Controllers\AccountsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CallController;
+use App\Http\Controllers\CallLogController;
 use App\Http\Controllers\CallTypeController;
 use App\Http\Controllers\DidNumberController;
+use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\TwilioWebhookController;
 use App\Http\Controllers\TwilioController;
 use App\Http\Controllers\TwilioCallbackController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\UserPhraseController;
 
 use App\Http\Controllers\ScriptController;
 use App\Http\Controllers\SettingsController;
@@ -112,6 +115,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::group(['prefix' => 'didnumbers', 'as' => 'didnumbers.'], function () {
         Route::get('/', [DidNumberController::class, 'index'])->name('index');
         Route::get('/create', [DidNumberController::class, 'create'])->name('create');
+        Route::get('/search', [DidNumberController::class, 'search'])->name('search');
         Route::get('/{id}', [DidNumberController::class, 'edit'])->name('edit');
         Route::patch('/{id}', [DidNumberController::class, 'update'])->name('update')->withoutMiddleware([VerifyCsrfToken::class]);
         Route::post('/', [DidNumberController::class, 'store'])->name('store');
@@ -129,15 +133,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::group(['prefix' => 'reports', 'as' => 'reports.'], function () {
-        Route::get('/', function () {
-            return Inertia::render('Reports/Index');
-        })->name('index');
+        Route::get('/', [ReportsController::class, 'index'])->name('index');
     });
 
     Route::group(['prefix' => 'call_logs', 'as' => 'call_logs.'], function () {
-        Route::get('/', function () {
-            return Inertia::render('CallLogs/Index');
-        })->name('index');
+        Route::get('/', [CallLogController::class, 'index'])->name('index');
     });
 
     Route::group(['prefix' => 'messages', 'as' => 'messages.'], function () {
@@ -173,7 +173,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::group(['prefix' => 'users', 'as' => 'users.'], function () {
         Route::get('/', [UsersController::class, 'index'])->name('index');
         Route::get('/edit/{id}', [UsersController::class, 'edit'])->name('edit');
-        Route::patch('/update/{id}', [UsersController::class, 'update'])->name('update');
+        Route::patch('/edit/{id}', [UsersController::class, 'update'])->name('update');
+        Route::get('/create', [UsersController::class, 'create'])->name('create');
+        Route::post('/store', [UsersController::class, 'store'])->name('store');
+        Route::get('/search', [UsersController::class, 'search'])->name('search');
+
+        Route::get('/{id}/queue_assignments', [UsersController::class, 'queueAssignments'])->name('queue-assignments');
+        Route::get('/{id}/phrases', [UsersController::class, 'phrases'])->name('phrases');
+        Route::get('/{id}/bio', [UsersController::class, 'bio'])->name('bio');
+    });
+
+    Route::group(['prefix' => 'user_phrases', 'as' => 'user_phrases.'], function () {
+        Route::delete('/delete/{id}', [UserPhraseController::class, 'delete'])->name('delete');
+        Route::put('/store', [UserPhraseController::class, 'store'])->name('store')->withoutMiddleware([VerifyCsrfToken::class]);
+        Route::patch('/update/{id}', [UserPhraseController::class, 'update'])->name('update');
     });
 
     Route::group(['prefix' => 'roles', 'as' => 'roles.'], function () {

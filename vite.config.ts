@@ -28,4 +28,7 @@ export default defineConfig({
     esbuild: {
         jsx: 'automatic',
     },
+    resolve: {
+        extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
+    }
 });

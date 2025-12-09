@@ -42,4 +42,9 @@ class CallLog extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function didNumber()
+    {
+        return $this->belongsTo(DidNumber::class, 'did_id', 'id');
+    }
 }

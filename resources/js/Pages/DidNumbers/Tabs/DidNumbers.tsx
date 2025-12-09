@@ -7,7 +7,7 @@ import { Trash } from "lucide-react";
 import { JSX } from "react";
 import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTrigger, DialogTitle } from "@/components/ui/dialog";
 import AppLayout from "@/Layouts/AppLayout";
-import { DidNumberTabs } from "@/components/DidNumberTabs";
+import { DidNumberTabs } from "@/components/Tabs/DidNumberTabs";
 import { BreadcrumbItem } from "@/types";
 import { index, create } from "@/routes/didnumbers";
 import { store } from "@/routes/didnumbers/did-numbers";

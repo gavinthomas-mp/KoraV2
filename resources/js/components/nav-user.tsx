@@ -19,7 +19,7 @@ import { type SharedData } from '@/types';
 import { usePage } from '@inertiajs/react';
 import { DropdownMenuPortal, DropdownMenuSub, DropdownMenuSubTrigger } from '@radix-ui/react-dropdown-menu';
 import { ChevronRight, ChevronsUpDown } from 'lucide-react';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { WorkerContext } from '@/Layouts/AppLayout';
 
 export function NavUser() {
@@ -27,7 +27,27 @@ export function NavUser() {
     const { auth } = usePage<SharedData>().props;
     const { state } = useSidebar();
     const isMobile = useIsMobile();
-    
+    const [currentActivityName, setCurrentActivityName] =  useState<string | null>(workerObject?.activity?.name || 'Offline');
+
+    useEffect(() => {
+        if (workerObject) {
+            const updateActivityName = () => {
+                const activity = workerObject?.activity;
+                setCurrentActivityName(activity ? activity.name : 'Offline');
+            };
+
+            // Initial activity name set
+            updateActivityName();
+
+            // Listen for activity changes
+            workerObject.on('activityUpdated', updateActivityName);
+
+            // Cleanup listener on unmount
+            return () => {
+                workerObject.off('activityUpdated', updateActivityName);
+            };
+        }
+    }, [workerObject]);
     return (
         <SidebarMenu>
             <SidebarMenuItem>
@@ -38,7 +58,7 @@ export function NavUser() {
                             className="group text-sidebar-accent-foreground data-[state=open]:bg-sidebar-accent"
                             data-test="sidebar-menu-button"
                         >
-                            <UserInfo user={auth.user} />
+                            <UserInfo  user={auth.user} currentActivityName={currentActivityName} />
                             <ChevronsUpDown className="ml-auto size-4" />
                         </SidebarMenuButton>
                     </DropdownMenuTrigger>
@@ -56,8 +76,8 @@ export function NavUser() {
                         <UserMenuContent user={auth.user} />
                         <DropdownMenuSub>
                             <DropdownMenuSubTrigger className='flex items-center'>
-                                <DropdownMenuItem disabled className='w-full flex items-center'>
-                                    {workerObject?.activity?.name || 'Offline'} 
+                                <DropdownMenuItem disabled className={`w-full flex items-center ${currentActivityName === 'Logged In' ? 'text-black !opacity-100' : ''}`}>
+                                    {currentActivityName} 
                                     <div className='ml-auto pl-5'>
                                         <ChevronRight className='size-4' />
                                     </div>

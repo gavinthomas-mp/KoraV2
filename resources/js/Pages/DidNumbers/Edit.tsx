@@ -1,7 +1,7 @@
 import AppLayout from "@/Layouts/AppLayout";
 import { BasicInfo } from "./Tabs/BasicInfo";
 import { JSX } from "react";
-import { DidNumberTabs } from "@/components/DidNumberTabs";
+import { DidNumberTabs } from "@/components/Tabs/DidNumberTabs";
 import { BreadcrumbItem } from "@/types";
 import { index } from "@/routes/didnumbers";
 

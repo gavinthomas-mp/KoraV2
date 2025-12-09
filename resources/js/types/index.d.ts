@@ -30,19 +30,6 @@ export interface SharedData {
     [key: string]: unknown;
 }
 
-export interface User {
-    id: number;
-    firstname: string;
-    lastname: string;
-    email: string;
-    avatar?: string;
-    email_verified_at: string | null;
-    two_factor_enabled?: boolean;
-    created_at: string;
-    updated_at: string;
-    [key: string]: unknown; // This allows for additional properties...
-}
-
 // Types
 export interface Employee {
     id: string;
@@ -258,5 +245,36 @@ export interface User {
     disabled_on: Date | null;
     force_password_reset: boolean;
     injixo_id: string | null;
+    [key: string]: any;
+    user_setting: {
+        user_id: number;
+        emp_id: number;
+        gc_staff: boolean;
+        gc_participant: boolean;
+        vn_employee: boolean;
+        vnl_employee: boolean;
+        timeoff_requests_admin: boolean;
+        incidents_admin: boolean;
+        upload_schedule: boolean;
+        view_schedules: boolean;
+        forecasting: boolean;
+        timecard_admin: boolean;
+        call_evaluation: boolean;
+        call_evaluation_delete: boolean;
+        access_recording: boolean;
+        remote_agent: boolean;
+        mp_employee: boolean;
+        dispatching: boolean;
+        view_emails: boolean;
+        enable_peopleware: boolean;
+        configuration: string;
+        [key: string]: any;
+    }
 }
 
+export interface Role {
+    id: number;
+    role: string;
+    description: string;
+    hierarchy: number;
+}

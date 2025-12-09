@@ -177,4 +177,17 @@ class DidNumberController extends Controller
             'id' => $id
         ]);
     }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('search', '');
+
+        $results = DidNumber::where('did_number', 'like', '%' . $query . '%')
+            ->orWhere('company', 'like', '%' . $query . '%')
+            ->where('deleted', 0)
+            ->where('company', '!=', '')
+            ->get();
+
+        return response()->json($results);
+    }
 }

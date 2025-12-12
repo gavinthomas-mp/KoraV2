@@ -278,3 +278,17 @@ export interface Role {
     description: string;
     hierarchy: number;
 }
+
+export interface Message {
+    id: number;
+    account_id: number;
+    did_number: string;
+    from_number: string;
+    to_number: string;
+    message_body: string;
+    status: string;
+    date_received: Date;
+    date_sent: Date;
+    deleted: boolean;
+    deleted_ts: Date | null;
+}

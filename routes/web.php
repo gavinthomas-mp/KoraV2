@@ -138,6 +138,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::group(['prefix' => 'call_logs', 'as' => 'call_logs.'], function () {
         Route::get('/', [CallLogController::class, 'index'])->name('index');
+        Route::get('/{id}', [CallLogController::class, 'show'])->name('show');
     });
 
     Route::group(['prefix' => 'messages', 'as' => 'messages.'], function () {

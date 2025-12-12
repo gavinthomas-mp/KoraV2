@@ -236,7 +236,7 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
                             onMouseEnter={() => setHighlightedIndex(index)}
                             className={`w-full text-left px-4 py-2 text-sm flex items-center justify-between transition-colors ${
                                 index === highlightedIndex
-                                ? 'bg-blue-50 text-blue-700'
+                                ? ''
                                 : 'text-slate-700 hover:bg-slate-50'
                             }`}
                             type="button"
